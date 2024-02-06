@@ -3,7 +3,7 @@ const Vendor = require("../db/models/vendorModel");
 
 module.exports.getQuery = async (req, res)=> {
     const search = req.body.query;
-    const agg = [
+    const agg1 = [
         {
           $search: {
             index: "restaurantsandfood",
@@ -21,9 +21,29 @@ module.exports.getQuery = async (req, res)=> {
           }
         }
       ];
+    const agg2 = [
+        {
+          $search: {
+            index: "restaurantnames",
+            text: {
+              query: search,
+              path: {
+                wildcard: "*"
+              },
+            }
+          }
+        },
+        {
+          $project :{
+            resId : "$_id",
+          }
+        }
+      ];
       try{
-          const searchResult = await Menu.aggregate(agg);
-          res.status(200).json(searchResult);
+          const searchResult1 = await Menu.aggregate(agg1);
+          const searchResult2 = await Vendor.aggregate(agg2);
+          const combinedResults = [...searchResult1, ...searchResult2];
+          res.status(200).json(combinedResults);
       }catch(error){
             throw(error)
       }
