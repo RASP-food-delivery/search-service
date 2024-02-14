@@ -12,6 +12,7 @@ module.exports.getQuery = async (req, res)=> {
               path: {
                 wildcard: "*"
               },
+              fuzzy : {},
             }
           }
         },
@@ -30,6 +31,7 @@ module.exports.getQuery = async (req, res)=> {
               path: {
                 wildcard: "*"
               },
+              fuzzy : {},
             }
           }
         },
